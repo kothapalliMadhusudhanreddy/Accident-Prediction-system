@@ -1,0 +1,70 @@
+ACCIDENT PREDICTION SYSTEM
+DATA CLEANING LOG
+=================
+
+SOURCE DATASET
+--------------
+data/raw/dataset.csv
+
+IMPORTANT RULE
+--------------
+The raw dataset must never be modified.
+All cleaning operations must be performed on a separate working copy.
+
+1. TIMESTAMP
+------------
+Convert timestamp to datetime.
+Check invalid timestamps and preserve chronological order.
+
+2. VEHICLE COUNT
+---------------
+Investigate missing values.
+Identify veh_dropout and veh_spike records.
+Do not automatically replace suspicious measurements.
+
+3. AVERAGE SPEED
+---------------
+Investigate missing values.
+Flag negative speeds and speeds exceeding posted limits.
+Investigate records marked speed_glitch.
+
+4. SIGNAL DATA
+--------------
+Preserve missing values for locations without signals.
+Investigate signal timing inconsistencies.
+Do not replace missing signal measurements with zero.
+
+5. DUPLICATE FEATURES
+---------------------
+Keep is_peak as the candidate feature.
+Exclude peak from initial modelling.
+
+6. POTENTIAL DATA LEAKAGE
+-------------------------
+Exclude severity, cause and vehicles_involved from initial predictors.
+Exclude veh_count_at_accident pending clarification.
+
+7. CONSTANT FEATURES
+---------------------
+Investigate state and season.
+Exclude from initial modelling because each has only one unique value.
+
+8. DATA QUALITY FLAGS
+---------------------
+Retain quality flags for auditing.
+Do not use them as initial prediction features.
+
+9. MISSING VALUE HANDLING
+-------------------------
+Do not perform global imputation.
+Imputation must be fitted using training data only during model preprocessing.
+
+10. TARGET
+----------
+Preserve accident_occurred.
+Do not remove or modify accident-labelled records without documented evidence.
+
+STATUS
+------
+Initial cleaning plan documented.
+No data transformations performed yet.

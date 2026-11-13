@@ -1,0 +1,299 @@
+
+ACCIDENT PREDICTION SYSTEM
+MODEL DEVELOPMENT AND EVALUATION REPORT
+
+==================================================
+1. PROJECT OVERVIEW
+==================================================
+
+Project: Accident Prediction System
+Task: Binary classification
+Target variable: accident_occurred
+
+The objective is to classify location-hour observations
+as accident or non-accident records using traffic,
+weather, road and time-related features.
+
+IMPORTANT:
+The available dataset does not establish whether all
+input features were measured before an accident.
+Therefore, this model is currently a historical
+classification baseline, not a proven advance-warning
+system.
+
+==================================================
+2. DATASET SUMMARY
+==================================================
+
+Total records: 2,016
+Total columns: 33
+Locations: 12
+Observation period: July 1–7, 2025
+
+Target distribution:
+Non-accident records: 1,923
+Accident-labelled records: 93
+
+Accident-labelled proportion: approximately 4.61%
+
+The dataset is imbalanced, with substantially fewer
+accident-labelled observations.
+
+The 93 positive records represent labelled
+location-hour observations. They have not been
+verified as 93 unique physical crashes.
+
+==================================================
+3. MODEL FEATURES
+==================================================
+
+Numerical features:
+- day_of_week
+- hour_of_day
+- vehicle_count_per_hr
+- avg_speed_kmph
+- lane_count
+- speed_limit_kmph
+
+Categorical features:
+- is_peak
+- weather
+- lighting
+- road_type
+- has_signal
+- enforcement_level
+
+Target:
+- accident_occurred
+
+Accident-specific fields such as severity,
+vehicles_involved and cause were excluded because
+they are populated only for accident records.
+
+==================================================
+4. PREPROCESSING PIPELINE
+==================================================
+
+Numerical preprocessing:
+- Missing values handled using median imputation.
+
+Categorical preprocessing:
+- Missing values handled using most-frequent
+  imputation.
+- One-hot encoding applied.
+- Unknown categories ignored during transformation.
+
+Preprocessing is fitted on training data through
+a scikit-learn Pipeline.
+
+==================================================
+5. BASELINE RANDOM FOREST MODEL
+==================================================
+
+Algorithm: RandomForestClassifier
+
+Configuration:
+- n_estimators = 300
+- max_depth = 8
+- min_samples_split = 10
+- min_samples_leaf = 4
+- class_weight = balanced
+- random_state = 42
+- n_jobs = -1
+
+The complete preprocessing and classification
+pipeline is saved as:
+
+improved_version/models/
+accident_prediction_pipeline.joblib
+
+==================================================
+6. CHRONOLOGICAL EVALUATION
+==================================================
+
+Original training period:
+July 1–5, 2025
+
+Training records: 1,440
+Accident-labelled records: 71
+
+Original test period:
+July 6–7, 2025
+
+Test records: 576
+Accident-labelled records: 22
+
+Baseline test results at the default threshold:
+
+Accuracy: 0.9062
+Precision: 0.0294
+Recall: 0.0455
+F1-score: 0.0357
+Average Precision: 0.0692
+
+Confusion matrix:
+
+True Negatives: 521
+False Positives: 33
+False Negatives: 21
+True Positives: 1
+
+Accuracy is misleading because the dataset is
+highly imbalanced. The baseline detected only
+1 of the 22 positive test observations at the
+default classification threshold.
+
+==================================================
+7. VALIDATION-BASED THRESHOLD COMPARISON
+==================================================
+
+A separate chronological validation experiment
+used:
+
+Training period: July 1–4, 2025
+Training records: 1,152
+Training positives: 52
+
+Validation period: July 5, 2025
+Validation records: 288
+Validation positives: 19
+
+Baseline validation:
+Average Precision: 0.1591
+
+Best F1 among tested thresholds:
+Threshold: 0.40
+Precision: 0.3125
+Recall: 0.2632
+F1-score: 0.2857
+
+Confusion counts:
+True Positives: 5
+False Positives: 11
+False Negatives: 14
+
+This threshold is a validation result, not a
+guarantee of future performance.
+
+==================================================
+8. SMOTENC EXPERIMENT
+==================================================
+
+SMOTENC was tested to address class imbalance.
+
+Sampling strategy: 0.5
+
+Validation Average Precision: 0.1462
+
+Best F1 among tested thresholds:
+Threshold: 0.25
+Precision: 0.1636
+Recall: 0.4737
+F1-score: 0.2432
+
+Confusion counts:
+True Positives: 9
+False Positives: 46
+False Negatives: 10
+
+SMOTENC detected more positive observations but
+also produced substantially more false alarms.
+
+The baseline model had the higher validation
+Average Precision and best F1-score.
+
+Therefore, the baseline remains the preferred
+candidate for further evaluation.
+
+==================================================
+9. FEATURE INVESTIGATION
+==================================================
+
+Feature importance and permutation importance
+were examined.
+
+A separate experiment removed
+vehicle_count_per_hr.
+
+Validation comparison:
+
+Baseline Average Precision: 0.1591
+Without vehicle count: 0.1492
+
+The vehicle count feature exactly matched
+veh_count_at_accident in all 93 accident-labelled
+records in the raw dataset.
+
+This raises a potential feature-timing or
+data-dependency concern.
+
+The measurement timing has not been established.
+Therefore, the feature's safety for genuine
+advance prediction remains unverified.
+
+Both feature configurations should be documented
+until the source and timing of measurements
+are confirmed.
+
+==================================================
+10. LIMITATIONS AND RISKS
+==================================================
+
+1. The dataset contains only 2,016 observations.
+
+2. Only 93 observations have positive accident
+   labels.
+
+3. The validation period contains only 19 positive
+   observations, making metrics unstable.
+
+4. The final two-day test period contains only
+   22 positive observations.
+
+5. The July 6–7 period was examined during earlier
+   experiments and is not an untouched holdout.
+
+6. Feature measurement timing is not documented.
+
+7. Vehicle count may have a dependency on an
+   accident-related measurement.
+
+8. The dataset does not establish a prediction
+   horizon or prove advance prediction.
+
+9. Real-time traffic and weather integration has
+   not been implemented or verified.
+
+10. Performance on unseen locations and future
+    periods has not been established.
+
+==================================================
+11. CONCLUSION
+==================================================
+
+A complete baseline Random Forest preprocessing
+and classification pipeline has been developed.
+
+Class imbalance experiments, validation-based
+threshold comparisons, feature importance analysis
+and feature exclusion experiments have been
+performed.
+
+The baseline performed better than SMOTENC on
+the selected validation metrics, but accident
+detection performance remains weak.
+
+The system is currently an experimental
+historical classification model.
+
+Further work is required to establish feature
+availability before accidents, improve recall
+without excessive false alarms, obtain more
+representative data, and evaluate performance
+on genuinely unseen future observations.
+
+The model must not be presented as a validated
+real-time accident warning system or as a system
+proven to reduce accidents.
+
+END OF REPORT

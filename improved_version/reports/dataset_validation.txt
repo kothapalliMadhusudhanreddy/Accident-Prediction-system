@@ -1,0 +1,57 @@
+ACCIDENT PREDICTION SYSTEM
+INITIAL DATASET VALIDATION REPORT
+=================================
+
+Dataset file: data/raw/dataset.csv
+
+1. DATASET OVERVIEW
+-------------------
+Total observations: 2016
+Total columns: 33
+Number of locations: 12
+Time coverage: 2025-07-01 to 2025-07-07
+Time interval: Hourly
+
+2. TARGET DISTRIBUTION
+----------------------
+Non-accident records: 1923 (95.39%)
+Accident-labelled records: 93 (4.61%)
+Missing target labels: 0
+
+3. DATA QUALITY
+---------------
+Complete duplicate rows: 0
+Duplicate location-time records: 0
+Invalid timestamps: 0
+Missing required columns: 0
+
+4. IMPORTANT MISSING VALUES
+---------------------------
+lighting: 22
+weather: 11
+vehicle_count_per_hr: 2
+avg_speed_kmph: 126
+signal_status: 672
+green_duration_s: 833
+red_duration_s: 834
+yellow_duration_s: 832
+cycle_time_s: 834
+violations_count: 834
+
+5. MODELLING RISKS
+------------------
+- Target classes are imbalanced.
+- Some traffic measurements contain invalid values.
+- Signal measurements are conditionally missing.
+- Severity, cause and vehicles_involved may cause target leakage.
+- Measurement timing relative to accidents requires confirmation.
+- The dataset contains historical observations, not a verified live feed.
+- Only seven days and twelve locations are represented.
+
+6. VALIDATION RESULT
+-------------------
+Initial structural validation: PASSED
+
+Note:
+This report records structural checks only. It does not certify
+that the dataset is suitable for real-time accident prediction.

@@ -1,0 +1,8 @@
+
+pandas==3.1.1
+numpy==2.4.6
+scikit-learn==1.5.1
+imbalanced-learn==0.13.0
+joblib==1.6.0
+streamlit==1.67.0
+sklearn-compat==0.1.6

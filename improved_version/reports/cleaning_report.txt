@@ -1,0 +1,36 @@
+ACCIDENT PREDICTION SYSTEM
+DATA CLEANING REPORT
+==================================================
+
+DATASET OVERVIEW
+Original shape: (2016, 33)
+Cleaned shape: (2016, 33)
+
+TARGET DISTRIBUTION
+Non-accident records: 1923
+Accident records: 93
+
+FINAL MISSING VALUES
+lighting: 22
+weather: 11
+vehicle_count_per_hr: 12
+avg_speed_kmph: 142
+peak: 2
+traffic_data_quality_flag: 1984
+signal_status: 672
+green_duration_s: 840
+red_duration_s: 834
+yellow_duration_s: 840
+cycle_time_s: 834
+violations_count: 834
+signal_data_quality_flag: 2000
+severity: 1923
+vehicles_involved: 1923
+cause: 1923
+
+DATA PRESERVATION
+Original raw dataset was not modified.
+Accident and non-accident records were preserved.
+
+NOTE
+Missing values have not been imputed. Model-specific imputation will be performed later using training data only.
